@@ -516,11 +516,12 @@ Engine_MxSynths : CroneEngine {
 			hz=Lag.kr(hz,portamento);
 
 			//mod params
-			fm_index=LinLin.kr(mod1,0,200,1.0,3.0);
-			bit_depth=LinExp.kr(mod2,1,24,1,24);
-			sample_rate=LinLin.kr(mod3,480,48000,100,48000);
+			fm_index=LinLin.kr(mod1,-1,1,1.0,3.0);
+			bit_depth=LinExp.kr(mod2,-1,1,,1,24);
+			sample_rate=LinLin.kr(mod3,-1,1,480,48000);
 			detune=LinExp.kr(mod4,-1,1,0.00001,0.3);
 			note=hz.cpsmidi + bend;
+
 			//make sound
       mod = SinOsc.ar(note * modPartial, 0, note * fm_index * LFNoise1.kr(5.reciprocal).abs);
       car = SinOsc.ar([note-detune,note+detune] * carPartial + mod, 0, 1);
