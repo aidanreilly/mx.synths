@@ -524,7 +524,7 @@ Engine_MxSynths : CroneEngine {
 
 			//make sound
       mod = SinOsc.ar(note * modPartial, 0, note * fm_index * LFNoise1.kr(5.reciprocal).abs);
-      car = SinOsc.ar(note * carPartial + mod, 0, 1);
+      car = SinOsc.ar([note-detune,note+detune].midicps * carPartial + mod, 0, 1);
       car_decimate = Decimator.ar(car, sample_rate, bit_depth, 1.0, 0);
 			env=EnvGen.ar(Env.adsr(attack,decay,sustain,release),(gate-EnvGen.kr(Env.new([0,0,1],[duration,0]))),doneAction:2);
 			snd = Pan2.ar(car_decimate,Lag.kr(pan,0.1));
