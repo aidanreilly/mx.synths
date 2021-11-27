@@ -508,23 +508,23 @@ Engine_MxSynths : CroneEngine {
 
 		//https://github.com/aidanreilly/sines/blob/main/lib/sines_engine.sc
 		SynthDef("sines_synth",{
-			arg out=0,hz=220,amp=1.0,gate=1,portamento=1,bend=0,attack=0.01,decay=0.2,sustain=0.9,release=5,modPartial=1, carPartial=1, fm_index=1.0, sample_rate=48000, bit_depth=24;mod1=0,mod2=0,mod3=0,mod4=0,pan=0,duration=600;
+			arg out=0,hz=220,amp=1.0,gate=1,portamento=1,bend=0,attack=0.01,decay=0.2,sustain=0.9,release=5,modPartial=1, carPartial=1, fm_index=1.0, sample_rate=48000, bit_depth=24,mod1=0,mod2=0,mod3=0,mod4=0,pan=0,duration=600;
 
 			//set up synth vars
-			var snd, mod, car, car_decimate, env, note;
+			var snd, mod, car, car_decimate, env, note, detune;
 			mod1=Lag.kr(mod1);mod2=Lag.kr(mod2);mod3=Lag.kr(mod3);mod4=Lag.kr(mod4);
 			hz=Lag.kr(hz,portamento);
 
 			//mod params
 			fm_index=LinLin.kr(mod1,-1,1,1.0,3.0);
-			bit_depth=LinExp.kr(mod2,-1,1,,1,24);
+			bit_depth=LinExp.kr(mod2,-1,1,1,24);
 			sample_rate=LinLin.kr(mod3,-1,1,480,48000);
 			detune=LinExp.kr(mod4,-1,1,0.00001,0.3);
 			note=hz.cpsmidi + bend;
 
 			//make sound
       mod = SinOsc.ar(note * modPartial, 0, note * fm_index * LFNoise1.kr(5.reciprocal).abs);
-      car = SinOsc.ar([note-detune,note+detune] * carPartial + mod, 0, 1);
+      car = SinOsc.ar(note * carPartial + mod, 0, 1);
       car_decimate = Decimator.ar(car, sample_rate, bit_depth, 1.0, 0);
 			env=EnvGen.ar(Env.adsr(attack,decay,sustain,release),(gate-EnvGen.kr(Env.new([0,0,1],[duration,0]))),doneAction:2);
 			snd = Pan2.ar(car_decimate,Lag.kr(pan,0.1));
