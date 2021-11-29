@@ -507,7 +507,7 @@ Engine_MxSynths : CroneEngine {
 		}).add;
 
 		//https://github.com/aidanreilly/sines/blob/main/lib/sines_engine.sc
-		SynthDef("sines_synth",{
+		SynthDef("sines",{
 			arg out=0,hz=220,amp=1.0,gate=1,portamento=1,bend=0,attack=0.01,decay=0.2,sustain=0.9,release=5,modPartial=1, carPartial=1, fm_index=1.0, sample_rate=48000, bit_depth=24,mod1=0,mod2=0,mod3=0,mod4=0,pan=0,duration=600;
 
 			//set up synth vars
@@ -516,7 +516,9 @@ Engine_MxSynths : CroneEngine {
 			hz=Lag.kr(hz,portamento);
 
 			//mod params
-			fm_index=LinLin.kr(mod1,-1,1,1.0,3.0);
+			//E1-3 controls mod1-3
+			//K1 + any encoder for mod4
+			fm_index=LinLin.kr(mod1,-1,1,3.0,200.0);
 			bit_depth=LinExp.kr(mod2,-1,1,1,24);
 			sample_rate=LinLin.kr(mod3,-1,1,480,48000);
 			detune=LinExp.kr(mod4,-1,1,0.00001,0.3);
